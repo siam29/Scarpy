@@ -1,0 +1,56 @@
+services:
+  scraper:
+    build: .
+    container_name: Scraper_container
+    volumes:
+      - .:/usr/src/app
+      - ./images:/usr/src/app/images
+    working_dir: /usr/src/app
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+    environment:
+      - DATABASE_URL=postgresql://aa-nadim:aa-nadim123@postgres:5432/scraping_db
+    command: ["scrapy", "crawl", "scraper"]
+
+  postgres:
+    image: postgres:latest
+    container_name: postgresDB_container
+    environment:
+      - POSTGRES_USER=aa-nadim
+      - POSTGRES_PASSWORD=aa-nadim123
+      - POSTGRES_DB=scraping_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:  
+      test: ["CMD-SHELL", "pg_isready -U aa-nadim"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  app_network:
+    driver: bridge
