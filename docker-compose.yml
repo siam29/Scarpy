@@ -18,9 +18,9 @@ services:
     image: postgres:latest
     container_name: postgresDB_container
     environment:
-      - POSTGRES_USER=aa-nadim
-      - POSTGRES_PASSWORD=aa-nadim123
-      - POSTGRES_DB=scraping_db
+      - POSTGRES_USER=siam
+      - POSTGRES_PASSWORD=siam123
+      - POSTGRES_DB=scraping_db1
     ports:
       - "5432:5432"
     volumes:
@@ -40,7 +40,7 @@ services:
       - "5050:80"
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin123
+      - PGADMIN_DEFAULT_PASSWORD=admin
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     restart: unless-stopped
